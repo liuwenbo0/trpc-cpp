@@ -18,3 +18,7 @@ cmake-build-debug/
 build/
 *.pb.h
 *.pb.cc
+
+trpc-cpp-tutorial/
+webliu_http/
+webliu_http_rpc/

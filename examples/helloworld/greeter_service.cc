@@ -1,6 +1,7 @@
 //
 //
-// Tencent is pleased to support the open source community by making tRPC available.
+// Tencent is pleased to support the open source community by making tRPC
+// available.
 //
 // Copyright (C) 2023 THL A29 Limited, a Tencent company.
 // All rights reserved.
@@ -21,14 +22,32 @@
 namespace test {
 namespace helloworld {
 
-::trpc::Status GreeterServiceImpl::SayHello(::trpc::ServerContextPtr context,
-                                            const ::trpc::test::helloworld::HelloRequest* request,
-                                            ::trpc::test::helloworld::HelloReply* reply) {
+::trpc::Status GreeterServiceImpl::SayHello(
+    ::trpc::ServerContextPtr context,
+    const ::trpc::test::helloworld::HelloRequest* request,
+    ::trpc::test::helloworld::HelloReply* reply) {
   // Your can access more information from rpc context, eg: remote ip and port
   TRPC_FMT_INFO("remote address: {}:{}", context->GetIp(), context->GetPort());
   TRPC_FMT_INFO("request message: {}", request->msg());
 
   std::string response = "Hello, " + request->msg();
+  reply->set_msg(response);
+
+  return ::trpc::kSuccStatus;
+}
+
+::trpc::Status GreeterServiceImpl::SayHelloAgain(
+    ::trpc::ServerContextPtr context,
+    const ::trpc::test::helloworld::HelloRequest* request,
+    ::trpc::test::helloworld::HelloReply* reply) {
+  // Your can access more information from rpc context, eg: remote ip and port
+  TRPC_FMT_INFO("remote address: {}:{}", context->GetIp(), context->GetPort());
+  TRPC_FMT_INFO("request message: {}", request->msg());
+
+  std::string response = "Hello, ";
+  response += request->msg();
+  response += " Again";
+
   reply->set_msg(response);
 
   return ::trpc::kSuccStatus;

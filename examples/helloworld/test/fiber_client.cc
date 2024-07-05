@@ -40,10 +40,28 @@ int DoRpcCall(const std::shared_ptr<::trpc::test::helloworld::GreeterServiceProx
   return 0;
 }
 
+int DoRpcCallAgain(const std::shared_ptr<::trpc::test::helloworld::GreeterServiceProxy>& proxy) {
+  ::trpc::ClientContextPtr client_ctx = ::trpc::MakeClientContext(proxy);
+  ::trpc::test::helloworld::HelloRequest req;
+  req.set_msg("fiber");
+  ::trpc::test::helloworld::HelloReply rsp;
+  ::trpc::Status status = proxy->SayHelloAgain(client_ctx, req, &rsp);
+  if (!status.OK()) {
+    std::cerr << "get again rpc error: " << status.ErrorMessage() << std::endl;
+    return -1;
+  }
+  std::cout << "get again rsp msg: " << rsp.msg() << std::endl;
+  return 0;
+}
+
 int Run() {
   auto proxy = ::trpc::GetTrpcClient()->GetProxy<::trpc::test::helloworld::GreeterServiceProxy>(FLAGS_service_name);
 
-  return DoRpcCall(proxy);
+  int ret = DoRpcCall(proxy);
+
+  ret = DoRpcCallAgain(proxy);
+
+  return ret;
 }
 
 void ParseClientConfig(int argc, char* argv[]) {
