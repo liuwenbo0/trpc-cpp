@@ -9,4 +9,4 @@ PointerAlignment: Left
 
 # Only sort headers in each include block
 SortIncludes: true
-IncludeBlocks: Preserve
+# IncludeBlocks: Preserve

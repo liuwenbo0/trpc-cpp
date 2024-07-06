@@ -64,19 +64,41 @@ bazel-bin/examples/features/http/server/http_server --config=examples/features/h
 We can run the following command to start the client program.
 
 ```shell
-bazel-bin/examples/features/http/client/client --client_config=examples/features/http/client/trpc_cpp_fiber.yaml 
+bazel-bin/examples/features/http/client/client --client_config=examples/features/http/client/trpc_cpp_fiber.yaml
 ```
 
 The content of the output from the client program is as follows:
 ``` text
-name: GET string, ok: 1
-name: GET json, ok: 1
-name: GET http response, ok: 1
-name: GET http response(not found), ok: 1
-name: HEAD string, ok: 1
-name: POST string, ok: 1
+FLAGS_service_name: http_client
+FLAGS_client_config: examples/features/http/client/trpc_cpp_fiber.yaml
+FLAGS_addr: 127.0.0.1:24856
+logging plugin configurations is not setted, log will be printed to the console.
+response content: {"name":"issueshooter","age":18,"hobby":["opensource project","movies","books"]}
+response content: {"msg":"your name is issueshooter who likes opensource project mostly."}
 name: POST json, ok: 1
-name: POST string, then wait http response, ok: 1
-name: UNARY invoking, ok: 1
+name: GET string, ok: 1
 final result of http calling: 1
+```
+
+* Use curl command to test
+
+first, use the following command to run thr http-server, then open another terminal window
+```shell
+bazel-bin/examples/features/http/server/http_server --config=examples/features/http/server/trpc_cpp_fiber.yaml
+```
+if you run the command in the other terminal window
+```shell
+curl http://0.0.0.0:24856/issueshoot-test -X POST -H "Content-Type: application/json" -d '{"name": "issueshooter", "age": 18, "hobby": ["opensource project", "movies", "books"]}'
+```
+the expected output is
+```text
+{"name": "issueshooter", "age": 18, "hobby": ["opensource project", "movies", "books"]}
+```
+then run the following command
+```shell
+curl http://0.0.0.0:24856/hello -X GET
+```
+the expected output is
+```text
+{"msg":"your name is issueshooter who likes opensource project mostly."}
 ```
