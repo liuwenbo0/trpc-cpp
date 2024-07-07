@@ -56,7 +56,7 @@ We can run the following command to start the server program.
 *CMake build targets can be found at `build` of this directory, you can replace below server&client binary path when you use cmake to compile.*
 
 ```shell
-bazel-bin/examples/features/http_rpc/server/http_rpc_server --config=examples/features/http_rpc/server/trpc_cpp_fiber.yaml 
+bazel-bin/examples/features/http_rpc/server/http_rpc_server --config=examples/features/http_rpc/server/trpc_cpp_fiber.yaml
 ```
 
 * Run the client program
@@ -70,11 +70,49 @@ bazel-bin/examples/features/http_rpc/client/client --client_config=examples/feat
 The content of the output from the client program is as follows:
 
 ``` text
-response content: hello, hello world!
-response content: hello, hello world!
-response content: hello, hello world!
+FLAGS_service_name: http_client
+FLAGS_client_config: examples/features/http_rpc/client/trpc_cpp_fiber.yaml
+FLAGS_addr: 127.0.0.1:54320
+logging plugin configurations is not setted, log will be printed to the console.
+request content: {"name":"issueshooter","age":18,"hobby":["opensource project","movies","books"]}
+request content: {"name":"issueshooter","age":18,"hobby":["opensource project","movies","books"]}
+request content: {"name":"issueshooter","age":18,"hobby":["opensource project","movies","books"]}
+response content: {"msg":"your name is issueshooter who likes opensource project mostly."}
+response content: {"msg":"your name is issueshooter who likes opensource project mostly."}
+response content: {"msg":"your name is issueshooter who likes opensource project mostly."}
 name: Unary invoking-1, ok: 1
 name: Unary invoking-2, ok: 1
 name: Unary invoking-3, ok: 1
 final result of http calling: 1
+```
+
+* Use protocurl command to test
+
+install the protocurl cli tool first, execute the following command
+```shell
+wget https://github.com/qaware/protocurl/releases/download/v1.9.0/protocurl_1.9.0_linux_386.zip
+mkdir -p /tmp/protocurl
+unzip protocurl_1.9.0_linux_386.zip -d /tmp/protocurl
+rm -f protocurl_1.9.0_linux_386.zip
+mv /tmp/protocurl/bin/protocurl /usr/local/bin/
+mv /tmp/protocurl/protocurl-internal /usr/local/
+chmod +x /usr/local/bin/protocurl
+rm -rf /tmp/protocurl
+protocurl -h
+```
+
+use the following command to run thr http-server, then open another terminal window
+```shell
+bazel-bin/examples/features/http_rpc/server/http_rpc_server --config=examples/features/http_rpc/server/trpc_cpp_fiber.yaml
+```
+if you run the command in the other terminal window
+```shell
+protocurl -I examples/issueimpl/proto -f issueimpl.proto -i trpc.test.issueimpl.IntroduceRequest -o trpc.test.issueimpl.IntroduceReply --in 'json' -d '{"msg": "{\"name\":\"issueshooter\",\"age\":18,\"hobby\":[\"opensource project\",\"movies\",\"books\"]}"}' -u http://0.0.0.0:54320/trpc.test.issueimpl.Introducer/SelfIntroduction
+```
+the expected output is
+```text
+=========================== POST Request  JSON    =========================== >>>
+{"msg":"{\"name\":\"issueshooter\",\"age\":18,\"hobby\":[\"opensource project\",\"movies\",\"books\"]}"}
+=========================== POST Response JSON    =========================== <<<
+{"msg":"{\"msg\":\"your name is issueshooter who likes opensource project mostly.\"}"}
 ```

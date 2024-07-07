@@ -15,14 +15,14 @@
 
 #include "trpc/common/trpc_app.h"
 
-#include "examples/issueimpl/greeter_service.h"
+#include "examples/issueimpl/server/service.h"
 
 namespace http::demo {
 
 class HttpdServer : public ::trpc::TrpcApp {
  public:
   int Initialize() override {
-    RegisterService("trpc.test.helloworld.Greeter", std::make_shared<test::helloworld::GreeterServiceImpl>());
+    RegisterService("trpc.test.issueimpl.Introducer", std::make_shared<trpc::test::issueimpl::IntroducerServiceImpl>());
 
     return 0;
   }

@@ -7,7 +7,7 @@ cc_binary(
     srcs = ["client.cc"],
     linkopts = ["-ldl"],
     deps = [
-        "//examples/helloworld:helloworld_proto",
+        "@proto//:issueimpl_proto",
         "@trpc_cpp//trpc/client:make_client_context",
         "@trpc_cpp//trpc/client:trpc_client",
         "@trpc_cpp//trpc/client/http:http_service_proxy",
@@ -17,5 +17,6 @@ cc_binary(
         "@trpc_cpp//trpc/common/config:trpc_config",
         "@trpc_cpp//trpc/coroutine:fiber",
         "@trpc_cpp//trpc/util/log:logging",
+        "@trpc_cpp//trpc/util/http:http_handler",
     ],
 )

@@ -7,10 +7,10 @@ server:
   app: test
   server: test1
   service:
-    - name: trpc.test.helloworld.Greeter
+    - name: trpc.test.issueimpl.Introducer
       network: tcp
       ip: 0.0.0.0
-      port: 24857
+      port: 54320
       protocol: trpc_over_http
 
 plugins:

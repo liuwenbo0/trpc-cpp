@@ -7,7 +7,7 @@ cc_binary(
     srcs = ["http_server.cc"],
     linkopts = ["-ldl"],
     deps = [
-        "//examples/helloworld:greeter_service",
+        "@trpc_cpp//examples/issueimpl/server:service",
         "@trpc_cpp//trpc/common:trpc_app",
     ],
 )

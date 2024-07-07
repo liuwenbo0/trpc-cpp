@@ -7,7 +7,7 @@
 
 #include "trpc/log/trpc_log.h"
 
-#include "server/service.h"
+#include "service.h"
 
 namespace trpc {
 namespace test {

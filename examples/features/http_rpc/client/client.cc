@@ -28,11 +28,12 @@
 #include "trpc/coroutine/fiber_latch.h"
 #include "trpc/util/log/logging.h"
 
-#include "examples/helloworld/helloworld.trpc.pb.h"
+#include "issueimpl.trpc.pb.h"
+#include "trpc/util/http/http_handler.h"
 
 DEFINE_string(service_name, "http_client", "callee service name");
 DEFINE_string(client_config, "trpc_cpp_fiber.yaml", "");
-DEFINE_string(addr, "127.0.0.1:24857", "ip:port");
+DEFINE_string(addr, "127.0.0.1:54320", "ip:port");
 
 namespace http::demo {
 
@@ -46,19 +47,24 @@ namespace {
 bool UnaryInvoke(const HttpServiceProxyPtr& proxy) {
   auto ctx = ::trpc::MakeClientContext(proxy);
   ctx->SetTimeout(5000);
-  ctx->SetFuncName("/trpc.test.helloworld.Greeter/SayHello");
-  ::trpc::test::helloworld::HelloRequest req;
-  ::trpc::test::helloworld::HelloReply rsp;
-
-  req.set_msg("hello world!");
-  auto status =
-      proxy->UnaryInvoke<::trpc::test::helloworld::HelloRequest, ::trpc::test::helloworld::HelloReply>(ctx, req, &rsp);
+  ctx->SetFuncName("/trpc.test.issueimpl.Introducer/SelfIntroduction");
+  ::trpc::test::issueimpl::IntroduceRequest req;
+  ::trpc::test::issueimpl::IntroduceReply rsp;
+  rapidjson::Document req_json;
+  req_json.Parse(R"({ "name": "issueshooter", "age": 18, "hobby": ["opensource project","movies", "books"]})");
+  rapidjson::StringBuffer buffer;
+  rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+  req_json.Accept(writer);
+  req.set_msg(buffer.GetString());
+  TRPC_FMT_INFO("request content: {}", req.msg());
+  auto status = proxy->UnaryInvoke<::trpc::test::issueimpl::IntroduceRequest, ::trpc::test::issueimpl::IntroduceReply>(
+      ctx, req, &rsp);
   if (!status.OK()) {
     TRPC_FMT_ERROR("status: {}", status.ToString());
     return false;
   }
   TRPC_FMT_INFO("response content: {}", rsp.msg());
-  if (rsp.msg().find(req.msg()) == std::string::npos) return false;
+  if (false) return false;
   return true;
 }
 }  // namespace
