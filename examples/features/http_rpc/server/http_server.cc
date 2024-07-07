@@ -15,7 +15,7 @@
 
 #include "trpc/common/trpc_app.h"
 
-#include "examples/helloworld/greeter_service.h"
+#include "examples/issueimpl/greeter_service.h"
 
 namespace http::demo {
 

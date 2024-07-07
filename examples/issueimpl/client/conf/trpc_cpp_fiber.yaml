@@ -1,0 +1,21 @@
+global:
+  threadmodel:
+    fiber:
+      - instance_name: fiber_instance
+        concurrency_hint: 8
+
+client:
+  service:
+    - name: trpc.test.issueimpl.Introducer
+      target: 127.0.0.1:54320
+      protocol: trpc
+      network: tcp
+      selector_name: direct
+
+plugins:
+  log:
+    default:
+      - name: default
+        sinks:
+          local_file:
+            filename: trpc_fiber_client.log

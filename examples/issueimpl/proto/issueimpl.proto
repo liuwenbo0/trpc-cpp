@@ -1,0 +1,15 @@
+syntax = "proto3";
+ 
+package trpc.test.issueimpl;
+
+service Introducer {
+  rpc SelfIntroduction (IntroduceRequest) returns (IntroduceReply) {}
+}
+
+message IntroduceRequest {
+  string msg = 1;
+}
+
+message IntroduceReply {
+  string msg = 1;
+}

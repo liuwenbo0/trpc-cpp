@@ -1,0 +1,27 @@
+global:
+  threadmodel:
+    default:
+      - instance_name: default_instance
+        io_handle_type: separate
+        io_thread_num: 2
+        handle_thread_num: 6
+
+server:
+  app: test
+  server: issueimpl
+  admin_port: 6666
+  admin_ip: 0.0.0.0
+  service:
+    - name: trpc.test.issueimpl.Introducer
+      protocol: trpc
+      network: tcp
+      ip: 0.0.0.0
+      port: 54320
+
+plugins:
+  log:
+    default:
+      - name: default
+        sinks:
+          local_file:
+            filename: trpc_server.log
